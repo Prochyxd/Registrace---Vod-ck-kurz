@@ -19,6 +19,7 @@ def druha_stranka():
     """
     Načte registrační stránku
     Získává a kontroluje zadané informace
+    
     """
     if request.method == 'POST':
         je_plavec = request.form['je_plavec']
