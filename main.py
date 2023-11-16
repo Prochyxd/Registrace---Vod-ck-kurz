@@ -7,11 +7,19 @@ registrace = [
 ]
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    """
+    Spáruje volné uživatele pomocí funkce 'sparte_lidi()'
+    Načte index.html stánku
+    """
     pary = sparte_lidi()
     return render_template('index.html', registrace=registrace, pary=pary), 200
 
 @app.route('/registrace', methods=['GET', 'POST'])
 def druha_stranka():
+    """
+    Načte registrační stránku
+    Získává a kontroluje zadané informace
+    """
     if request.method == 'POST':
         je_plavec = request.form['je_plavec']
         nick = request.form['nick']
@@ -33,6 +41,9 @@ def druha_stranka():
     return render_template('registrace.html'), 200
 
 def sparte_lidi():
+    """
+    Spáruje uživatele, kteří nemají kamaráda
+    """
     lide_s_kamarady = {r['nick']: r['kanoe_kamarad'] for r in registrace if r['kanoe_kamarad']}
     lide_bez_kamaradu = [r['nick'] for r in registrace if not r['kanoe_kamarad']]
 
