@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Registrace</title>
+</head>
+
+<body>
+    <div class="container my-5">
+        <div id="flashMessage"></div>
+        <h1>Registrace</h1>    
+        <form>
+            <!--Přezdívka osoby (Povinné textového pole, co bude mít name="nick". Povoleno 2 až 20 znaků, jen čísla, písmena bez mezer)-->
+            <div class="form-group">
+                <label for="nick">Přezdívka osoby</label>
+                <input type="text" class="form-control" id="nick" name="nick" placeholder="Přezdívka osoby" required>
+            </div>
+            <!--Zda-li osoba umí plavat (Povinné pole, které umožní zvolit hodnoty Ano=1/Ne=0, který bude mít name="je_plavec")-->
+            <div class="form-group">
+                <label for="je_plavec">Zda-li osoba umí plavat</label>
+                <select class="form-control" id="je_plavec" name="je_plavec" required>
+                    <option value="1">Ano</option>
+                    <option value="0">Ne</option>
+                </select>
+            </div>
+            <!--S kým by osoba chtěla být na lodi (Nepovinné textového pole a bude mít name="kanoe_kamarad" )-->
+            <div class="form-group">
+                <label for="kanoe_kamarad">S kým by osoba chtěla být na lodi</label>
+                <input type="text" class="form-control" id="kanoe_kamarad" name="kanoe_kamarad"
+                    placeholder="S kým by osoba chtěla být na lodi">
+            </div>
+            <!--Tlačítko/odkaz pro odeslání.-->
+            <button type="submit" class="btn btn-primary">Odeslat</button>
+            <!--Tlačítko/odkaz pro storno a návrat na předchozí stránku.-->
+            <a href="index.html" class="btn btn-secondary">Storno</a>
+        </form>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script>
+        $("form").submit(function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: "/registrace",
+                type: "POST",
+                data: {
+                    nick: $("#nick").val(),
+                    je_plavec: $("#je_plavec").val(),
+                    kanoe_kamarad: $("#kanoe_kamarad").val()
+                }
+                })
+                .done( function (data) {
+                    $("#flashMessage").html(
+                        "<div class='alert alert-success'>" + data.message + "</div>"
+                    );
+                    setTimeout(function () {
+                        window.location.href = "/";
+                    }, 5000);
+                })
+                .fail( function (data) {
+                    $("#flashMessage").html(
+                        "<div class='alert alert-danger'>" + data.responseJSON.message + "</div>"
+                    );
+                    setTimeout(function () {
+                        $("#flashMessage").html("");
+                    }, 5000);
+                });
+                
+            });
+    </script>
+</body>
+</html>
